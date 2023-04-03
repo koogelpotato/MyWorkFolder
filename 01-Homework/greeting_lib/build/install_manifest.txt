@@ -1,0 +1,2 @@
+/usr/local/lib/libgreeting-static.a
+/usr/local/lib/libgreeting-dynamic.so

@@ -1,0 +1,6 @@
+# ninja log v5
+0	303	1680556740248535637	CMakeFiles/greeting-static.dir/src/greeting.cpp.o	5a60f05ecd264069
+0	321	1680556740280535418	CMakeFiles/greeting-dynamic.dir/src/greeting.cpp.o	618b9952369d5fe9
+305	429	1680556740384534705	libgreeting-static.a	fe58a0a985ffb213
+321	455	1680556740412534514	libgreeting-dynamic.so	4ca74ff26bbf23fb
+1	28	0	CMakeFiles/install.util	ca0f24bc4947be87
