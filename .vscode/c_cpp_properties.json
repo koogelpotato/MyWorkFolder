@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/usr/"
+                "/usr/",
+                "${workspaceFolder}/01-Homework/greeting"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc-11",

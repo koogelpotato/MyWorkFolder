@@ -1,0 +1,6 @@
+/home/koogel/.config/MyWorkFolder/01-homework/greeting/build/CMakeFiles/myproject.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting/build/CMakeFiles/edit_cache.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting/build/CMakeFiles/rebuild_cache.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting/build/lib/CMakeFiles/greeting.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting/build/lib/CMakeFiles/edit_cache.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting/build/lib/CMakeFiles/rebuild_cache.dir

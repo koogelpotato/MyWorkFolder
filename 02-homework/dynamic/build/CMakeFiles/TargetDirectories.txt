@@ -1,0 +1,3 @@
+/home/koogel/.config/MyWorkFolder/02-homework/dynamic/build/CMakeFiles/myapp.dir
+/home/koogel/.config/MyWorkFolder/02-homework/dynamic/build/CMakeFiles/edit_cache.dir
+/home/koogel/.config/MyWorkFolder/02-homework/dynamic/build/CMakeFiles/rebuild_cache.dir

@@ -1,0 +1,6 @@
+/home/koogel/.config/MyWorkFolder/02-homework/fun/build/CMakeFiles/RedSquare.dir
+/home/koogel/.config/MyWorkFolder/02-homework/fun/build/CMakeFiles/RedSquare-velf.dir
+/home/koogel/.config/MyWorkFolder/02-homework/fun/build/CMakeFiles/eboot.bin-self.dir
+/home/koogel/.config/MyWorkFolder/02-homework/fun/build/CMakeFiles/RedSquare.vpk-vpk.dir
+/home/koogel/.config/MyWorkFolder/02-homework/fun/build/CMakeFiles/edit_cache.dir
+/home/koogel/.config/MyWorkFolder/02-homework/fun/build/CMakeFiles/rebuild_cache.dir

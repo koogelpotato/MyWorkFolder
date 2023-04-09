@@ -1,0 +1,7 @@
+# Hashes of file build rules.
+91ab815831666128d64877bfb5a5f5e0 CMakeFiles/RedSquare-velf
+42b6d3ea8886a9e266f0d0be1a8c26ae CMakeFiles/RedSquare.vpk-vpk
+b4d5582090db2534b9c5cc819c8947e6 CMakeFiles/eboot.bin-self
+be6039a5bb362e422ed7da2a192001c6 RedSquare.vpk.out
+2bc6b01faf58af932746475fb6c7133b RedSquare.vpk_param.sfo
+04db13b55bffa1636f7abdb0ec52ac92 eboot.bin.out

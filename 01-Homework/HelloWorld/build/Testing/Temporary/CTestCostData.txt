@@ -1,2 +1,0 @@
-hello_world_test 1 0.00935081
----

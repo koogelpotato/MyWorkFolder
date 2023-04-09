@@ -1,0 +1,19 @@
+Start testing: Apr 04 01:11 +03
+----------------------------------------------------------
+1/1 Testing: hello_world_test
+1/1 Test: hello_world_test
+Command: "/home/koogel/.config/MyWorkFolder/01-Homework/HelloWorld/build/hello_world"
+Directory: /home/koogel/.config/MyWorkFolder/01-Homework/HelloWorld/build
+"hello_world_test" start time: Apr 04 01:11 +03
+Output:
+----------------------------------------------------------
+Hello world!
+<end of output>
+Test time =   0.01 sec
+----------------------------------------------------------
+Test Passed.
+"hello_world_test" end time: Apr 04 01:11 +03
+"hello_world_test" time elapsed: 00:00:00
+----------------------------------------------------------
+
+End testing: Apr 04 01:11 +03

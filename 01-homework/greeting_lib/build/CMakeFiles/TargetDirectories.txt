@@ -1,0 +1,8 @@
+/home/koogel/.config/MyWorkFolder/01-homework/greeting_lib/build/CMakeFiles/greeting-static.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting_lib/build/CMakeFiles/greeting-dynamic.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting_lib/build/CMakeFiles/edit_cache.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting_lib/build/CMakeFiles/rebuild_cache.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting_lib/build/CMakeFiles/list_install_components.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting_lib/build/CMakeFiles/install.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting_lib/build/CMakeFiles/install/local.dir
+/home/koogel/.config/MyWorkFolder/01-homework/greeting_lib/build/CMakeFiles/install/strip.dir
