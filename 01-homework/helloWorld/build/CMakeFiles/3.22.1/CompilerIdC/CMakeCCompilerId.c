@@ -819,7 +819,7 @@ const char *info_language_extensions_default = "INFO"
     !defined(__STRICT_ANSI__) && !defined(_MSC_VER)
                                                "ON"
 #else
-                                                "OFF"
+                                               "OFF"
 #endif
                                                "]";
 

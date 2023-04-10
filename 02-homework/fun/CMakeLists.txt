@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.22)
 
 project(MyProject)
 
-find_package(SDL2 REQUIRED)
+find_package(SDL3 REQUIRED)
 
 if( NOT DEFINED CMAKE_TOOLCHAIN_FILE )
   if( DEFINED ENV{VITASDK} )
@@ -23,8 +23,8 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-exceptions")
 include_directories(
   ${VITASDK}/arm-vita-eabi/include/SDL
 )
-find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+find_package(SDL3 REQUIRED)
+include_directories(${SDL3_INCLUDE_DIRS})
 
 include_directories(
     src,
@@ -37,7 +37,7 @@ add_executable(${VITA_APPNAME}
     src/main.cpp
 )
 
-target_link_libraries(${VITA_APPNAME} ${SDL2_LIBRARIES})
+target_link_libraries(${VITA_APPNAME} ${SDL3_LIBRARIES})
 
 file(GLOB_RECURSE ASSETS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} data/*)
 
