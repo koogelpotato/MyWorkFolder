@@ -41,3 +41,8 @@ Loaded '/usr/local/lib/libSDL3.so.0'. Symbols loaded
 **WARNING: UNTESTED BUILD**
 
 PS VITA vpk with dynamicaly linked SDL3 
+
+
+## Build-static-sub
+
+A build that substitutes a static library for dynamic library(Check `CMakeLists.txt`)
