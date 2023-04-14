@@ -6,7 +6,8 @@
                 "${workspaceFolder}/**",
                 "/usr/include/",
                 "/usr/local/lib",
-                "/usr/bin/"
+                "/usr/bin/",
+                "${workspaceFolder}/03-homework/sdl-infinite-loop/include"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/gcc-11",

@@ -6,6 +6,6 @@ find_package(SDL3 REQUIRED)
 
 add_executable(myapp src/main.cpp)
 
-target_include_directories(myapp PRIVATE include)
+target_include_directories(myapp PRIVATE ${PROJECT_SOURCE_DIR})
 
 target_link_libraries(myapp PRIVATE SDL3::SDL3)

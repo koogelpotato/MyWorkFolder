@@ -1,3 +1,0 @@
-/home/koogel/.config/MyWorkFolder/02-homework/static-sub/build/CMakeFiles/sdl-sub.dir
-/home/koogel/.config/MyWorkFolder/02-homework/static-sub/build/CMakeFiles/edit_cache.dir
-/home/koogel/.config/MyWorkFolder/02-homework/static-sub/build/CMakeFiles/rebuild_cache.dir
