@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include <SDL3/SDL.h>
 #include <keybind.hpp>
@@ -42,6 +43,7 @@ bool init()
 	}
     else
     {
+        cout << "Current video driver:" << SDL_GetCurrentVideoDriver() << endl;
         window = SDL_CreateWindow( "infinite loop", 640, 480, SDL_WINDOW_OPENGL);
 		if( window == NULL )
 		{
@@ -88,16 +90,19 @@ bool process_key(SDL_Event& event, std::unordered_map<SDL_Keycode, keybinds>& ke
                 case KEY_PRESS_REMAP :
                 {
                     cout << "Input a key to remap\n" << endl;
-                    SDL_Keycode old_key = event.key.keysym.sym;
-                    SDL_Delay(1000);
+                    SDL_Keycode  old_key = event.key.keysym.sym;
+                    SDL_Delay(5000);
                     cout << "Input the new key" << endl;
-                    SDL_Keycode new_key = event.key.keysym.sym;
-                    remap_key(old_key,new_key, keymap);
+                    SDL_Keycode new_key =  event.key.keysym.sym;
+                    remap_key(old_key ,new_key, keymap);
                 }
                     break;
                 case KEY_PRESS_PRINTALL:
+                {
+                    cout << "Here are the keys: " << endl;
                     print_all_keys(keymap);
                     break;
+                }
                 case KEY_PRESS_QUIT:
                     cout << "Thank you, and goodbye!" << endl;
                     quit = true;
@@ -122,8 +127,7 @@ void remap_key(SDL_Keycode old_key, SDL_Keycode new_key, std::unordered_map<SDL_
 void print_all_keys(std::unordered_map<SDL_Keycode, keybinds>& keymap)
 {
     using namespace std;
-    auto print_key_value = [](const auto& key, const auto& value)
-    {
-        cout << "Key:[" << key << "] Action:[" << value << "]\n";
-    };
+    for_each(keymap.begin(), keymap.end(), [](const auto& key_value_pair) {
+        cout << "Key:[" << key_value_pair.first << "] Action:[" << key_value_pair.second << "]\n";
+    });
 }
