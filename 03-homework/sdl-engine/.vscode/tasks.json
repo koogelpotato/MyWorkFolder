@@ -8,11 +8,9 @@
                 "-fdiagnostics-color=always",
                 "-g",
                 "${file}",
+                "${workspaceFolder}/**",
+                "libengine",
                 "-o",
-                "${workspaceFolder}/src/main.cpp",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/build/engine-static",
-                "${workspaceFolder}/lib",
                 "-v"
             ],
             "options": {

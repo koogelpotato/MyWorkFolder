@@ -8,8 +8,7 @@
                 "/usr/include/x86_64-linux-gnu/c++/11"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/clang",
-            "configurationProvider": "ms-vscode.cmake-tools"
+            "compilerPath": "/usr/bin/clang"
         }
     ],
     "version": 4
