@@ -9,14 +9,10 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${workspaceFolder}/src/main.cpp",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/build/engine-static",
-                "${workspaceFolder}/lib",
-                "-v"
+                "${fileDirname}/${fileBasenameNoExtension}"
             ],
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${fileDirname}"
             },
             "problemMatcher": [
                 "$gcc"
