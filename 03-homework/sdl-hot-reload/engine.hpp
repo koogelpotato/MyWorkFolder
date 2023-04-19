@@ -5,6 +5,7 @@
 #include <string>
 #include <string_view>
 #include <SDL3/SDL.h>
+class game;
 class engine;
 
 engine* create_engine();
@@ -19,6 +20,7 @@ class engine
         virtual void uninitialize()       = 0;
         virtual void print_all_keys(std::unordered_map<SDL_Keycode, keybinds>& keymap) = 0;
         virtual void remap_key(SDL_Keycode old_key, SDL_Keycode new_key, std::unordered_map<SDL_Keycode, keybinds>& keymap) = 0;
+        virtual game* hot_reload(game* old_game, const char* library_name, const char* temp_lib, engine& engine, void*& old_handle) = 0;
 };
 struct game
 {

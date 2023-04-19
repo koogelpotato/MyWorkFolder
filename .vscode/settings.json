@@ -1,3 +1,6 @@
 {
-    "cmake.sourceDirectory": "${workspaceFolder}/02-homework/dynamic"
+    "cmake.sourceDirectory": "${workspaceFolder}/02-homework/dynamic",
+    "files.associations": {
+        "ostream": "cpp"
+    }
 }

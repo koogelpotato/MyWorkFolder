@@ -15,7 +15,6 @@ class engine_impl final: public engine
 public:
     engine_impl() {}
     SDL_Window* window; 
-    game* reload_game(const char* library_name, engine& engine, void*& game_library_handle);
     virtual std::string initialize(std::string_view config) override
     {
         
@@ -121,51 +120,83 @@ public:
         keymap[new_key] = keybind;
     }
     }
+    virtual game* hot_reload(game* old_game, const char* library_name, const char* temp_lib, engine& engine, void*& old_handle) override
+    {
+    if (old_game)
+    {
+        SDL_UnloadObject(old_handle);
+        old_handle = nullptr;
+    }
+
+    try
+    {
+        remove(temp_lib); // delete the old library file//  
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << "error: can't remove [" << temp_lib << "]: " << ex.what()
+                  << std::endl;
+        return nullptr;
+    }
+
+    try
+    {
+        std::filesystem::copy(library_name, temp_lib); // throw on error
+    }
+    catch (const std::exception& ex)
+    {
+        std::cerr << "error: can't copy [" << library_name << "]to[" << temp_lib
+                  << "] : " << ex.what() << std::endl;
+        return nullptr;
+    }
+    void* game_library_handle = SDL_LoadObject(temp_lib);
+    if (game_library_handle == nullptr)
+    {
+        std::cerr << "error: can't load library [" << temp_lib
+                  << "]: " << SDL_GetError() << std::endl;
+        return nullptr;
+    }
+
+    auto create_game = reinterpret_cast<game* (*)()>(SDL_LoadFunction(
+        game_library_handle, "create_game")); // The reinterpret_cast is used to
+                                              // convert the return value of
+    // SDL_LoadFunction() to the type of the function pointer create_game, which
+    // is sss::game* (*)().
+
+    if (create_game == nullptr)
+    {
+        std::cerr << "error: can't find symbol 'create_game' in library ["
+                  << temp_lib << "]: " << SDL_GetError() << std::endl;
+        return nullptr;
+    }
+
+    auto game = create_game();
+    if (game == nullptr)
+    {
+        std::cerr << "error: can't create game object from library ["
+                  << temp_lib << "]" << std::endl;
+        return nullptr;
+    }
+
+    if (old_game)
+    {
+        SDL_UnloadObject(old_handle);
+        old_handle = nullptr;
+    }
+
+    old_handle = game_library_handle;
+
+    return game;
+    }
     
+
+
     
 
     virtual ~engine_impl() override {}
 };
 
 static bool already_exist = false;
-
-game* hot_reload(const char* library_name, engine& engine, void*& game_library_handle) 
-{
-     // Unload the old game library
-    if (game_library_handle != nullptr)
-    {
-        std::cout << "unloading game library" << std::endl;
-        SDL_UnloadObject(game_library_handle);
-        game_library_handle = nullptr;
-    }
-
-    // Load the new game library
-    game_library_handle = dlopen(library_name, RTLD_NOW | RTLD_GLOBAL);
-    if (game_library_handle == nullptr)
-    {
-        std::cerr << "Failed to load game library: " << dlerror() << std::endl;
-        return nullptr;
-    }
-
-    // Get a pointer to the create_game function
-    using create_game_ptr = decltype(&create_game);
-    auto create_game_func = reinterpret_cast<create_game_ptr>(dlsym(game_library_handle, "create_game"));
-    if (create_game_func == nullptr)
-    {
-        std::cerr << "Failed to find create_game function: " << dlerror() << std::endl;
-        return nullptr;
-    }
-
-    // Create the game instance
-    game* game = create_game_func(&engine);
-    if (game == nullptr)
-    {
-        std::cerr << "Failed to create game instance" << std::endl;
-        return nullptr;
-    }
-
-    return game;
-}
 
 engine* create_engine()
 {
