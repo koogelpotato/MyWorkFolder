@@ -7,7 +7,7 @@ int main(int argc, char *argv[]) {
   }
 
   SDL_Window *window =
-      SDL_CreateWindow("Hello, SDL3!", 640,480,SDL_WINDOW_FULLSCREEN);
+      SDL_CreateWindow("Hello, SDL3!", 640, 480, SDL_WINDOW_FULLSCREEN);
   if (!window) {
     SDL_Log("Failed to create window: %s", SDL_GetError());
     return 1;
