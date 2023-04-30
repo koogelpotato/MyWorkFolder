@@ -13,13 +13,17 @@ int main(int, char **) {
   triangle_render render_tri(image, width, height);
   render_tri.clear(black);
 
-  std::vector<position> triangle_vertices = {
-      {0, 0},
-      {static_cast<int>(width - 1), static_cast<int>(height - 1)},
-      {0, static_cast<int>(height - 1)}};
+  std::vector<position> triangle_vertices;
+  triangle_vertices.push_back(position{0, 0});
+  triangle_vertices.push_back(
+      position{static_cast<int>(width - 1), static_cast<int>(height - 1)});
+  triangle_vertices.push_back(position{0, static_cast<int>(height - 1)});
+
   render_tri.draw_triangles(triangle_vertices, 3, green);
 
-  image.save_image("single_triangle.ppm");
+  image.save_image("02_triangle.ppm");
+
+  render_tri.clear(black);
 
   constexpr size_t max_x = 10;
   constexpr size_t max_y = 10;
@@ -49,7 +53,7 @@ int main(int, char **) {
 
   render_tri.draw_triangles(triangles, triangles.size(), green);
 
-  image.save_image("grid_triangles.ppm");
+  image.save_image("03_triangles.ppm");
 
   return 0;
 }

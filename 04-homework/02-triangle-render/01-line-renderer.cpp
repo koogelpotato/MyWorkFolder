@@ -21,11 +21,9 @@ pixels line_render::pixels_positions(position start, position end) {
   int x1 = end.x;
   int y1 = end.y;
 
-  if (x1 < x0) {
+  if (x1 <= x0) {
     std::swap(x0, x1);
     std::swap(y0, y1);
-    x0 = -x0;
-    x1 = -x1;
   }
 
   int dx = x1 - x0;
@@ -35,13 +33,21 @@ pixels line_render::pixels_positions(position start, position end) {
   int derror = std::abs(dy) * 2;
   int y = y0;
 
-  for (int x = x0; x <= x1; ++x) {
-    result.push_back(position{x, y});
+  if (dx == 0) { // vertical line
+    int ystep = (y1 > y0) ? 1 : -1;
+    for (int y = y0; y != y1; y += ystep) {
+      result.push_back(position{x0, y});
+    }
+    result.push_back(position{x0, y1});
+  } else {
+    for (int x = x0; x <= x1; ++x) {
+      result.push_back(position{x, y});
 
-    error += derror;
-    if (error > dx) {
-      y += (dy > 0) ? 1 : -1;
-      error -= dx * 2;
+      error += derror;
+      if (error > dx) {
+        y += (dy > 0) ? 1 : -1;
+        error -= dx * 2;
+      }
     }
   }
   return result;

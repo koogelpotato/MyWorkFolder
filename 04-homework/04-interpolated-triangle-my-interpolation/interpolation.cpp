@@ -7,11 +7,7 @@ typedef float Vec2[2];
 typedef float Vec3[3];
 typedef unsigned char Rgb[3];
 
-inline float edgeFunction(
-    const Vec3 &a, const Vec3 &b,
-    const Vec3
-        &c) // https://en.wikipedia.org/wiki/Barycentric_coordinate_system
-{
+inline float edgeFunction(const Vec3 &a, const Vec3 &b, const Vec3 &c) {
   return (c[0] - a[0]) * (b[1] - a[1]) - (c[1] - a[1]) * (b[0] - a[0]);
 }
 
