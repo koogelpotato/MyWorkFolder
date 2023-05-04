@@ -9,7 +9,7 @@
                 "/usr/local/include/SDL3"
             ],
             "defines": [],
-            "compilerPath": "/usr/bin/g++-11"
+            "compilerPath": "/usr/bin/clang"
         }
     ],
     "version": 4

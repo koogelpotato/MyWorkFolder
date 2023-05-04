@@ -5,8 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "/usr/include/c++/11",
-                "/usr/include/x86_64-linux-gnu/c++/11",
-                "/usr/local/include/SDL3"
+                "/usr/include/x86_64-linux-gnu/c++/11"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/g++-11"
