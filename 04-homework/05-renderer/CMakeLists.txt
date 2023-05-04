@@ -11,7 +11,7 @@ add_executable(triangle_renderer
     02-triangle-render.cpp
     03-indexed-triangle-render.cpp
     03-indexed-triangle-render.hpp
-    04-interpolated-triangle-main.cpp
+    05-shader.cpp
     04-interpolated-triangle.cpp
     04-interpolated-triangle.hpp
 )
