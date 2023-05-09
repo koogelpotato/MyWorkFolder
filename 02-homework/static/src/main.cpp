@@ -2,7 +2,8 @@
 #include <cstdlib>
 #include <iostream>
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[])
+{
     SDL_version compiled;
     SDL_version linked;
 
@@ -15,6 +16,6 @@ int main(int argc, char *argv[]) {
               << (int)linked.minor << "." << (int)linked.patch << std::endl;
 
     bool is_good = std::cout.good();
-    int result = is_good ? EXIT_SUCCESS : EXIT_FAILURE;
+    int  result  = is_good ? EXIT_SUCCESS : EXIT_FAILURE;
     return result;
 }

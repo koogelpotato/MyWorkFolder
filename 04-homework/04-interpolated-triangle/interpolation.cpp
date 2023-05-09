@@ -3,21 +3,23 @@
 #include <cstring>
 #include <fstream>
 
-typedef float Vec2[2];
-typedef float Vec3[3];
+typedef float         Vec2[2];
+typedef float         Vec3[3];
 typedef unsigned char Rgb[3];
 
-inline float edgeFunction(const Vec3 &a, const Vec3 &b, const Vec3 &c) {
+inline float edgeFunction(const Vec3& a, const Vec3& b, const Vec3& c)
+{
     return (c[0] - a[0]) * (b[1] - a[1]) - (c[1] - a[1]) * (b[0] - a[0]);
 }
 
-int main(int argc, char **argv) {
-    Vec3 v2 = {-48, -10, 82};
-    Vec3 v1 = {29, -15, 44};
-    Vec3 v0 = {13, 34, 114};
-    Vec3 c2 = {1, 0, 0};
-    Vec3 c1 = {0, 1, 0};
-    Vec3 c0 = {0, 0, 1};
+int main(int argc, char** argv)
+{
+    Vec3 v2 = { -48, -10, 82 };
+    Vec3 v1 = { 29, -15, 44 };
+    Vec3 v0 = { 13, 34, 114 };
+    Vec3 c2 = { 1, 0, 0 };
+    Vec3 c1 = { 0, 1, 0 };
+    Vec3 c0 = { 0, 0, 1 };
 
     const uint32_t w = 512;
     const uint32_t h = 512;
@@ -32,19 +34,21 @@ int main(int argc, char **argv) {
     v1[0] = (1 + v1[0]) * 0.5 * w, v1[1] = (1 + v1[1]) * 0.5 * h;
     v2[0] = (1 + v2[0]) * 0.5 * w, v2[1] = (1 + v2[1]) * 0.5 * h;
 
-    Rgb *framebuffer = new Rgb[w * h];
+    Rgb* framebuffer = new Rgb[w * h];
     memset(framebuffer, 0x0, w * h * 3);
 
     float area = edgeFunction(v0, v1, v2);
 
-    for (uint32_t j = 0; j < h; ++j) {
-        for (uint32_t i = 0; i < w; ++i) {
-            Vec3 p = {i + 0.5, h - j + 0.5, 0};
+    for (uint32_t j = 0; j < h; ++j)
+    {
+        for (uint32_t i = 0; i < w; ++i)
+        {
+            Vec3  p  = { i + 0.5, h - j + 0.5, 0 };
             float w0 = edgeFunction(v1, v2, p);
             float w1 = edgeFunction(v2, v0, p);
             float w2 = edgeFunction(v0, v1, p);
-            if (w0 >= 0 && w1 >= 0 &&
-                w2 >= 0) {  // check if color is inside triangle
+            if (w0 >= 0 && w1 >= 0 && w2 >= 0)
+            {               // check if color is inside triangle
                 w0 /= area; // normalize weights
                 w1 /= area;
                 w2 /= area;
@@ -64,7 +68,7 @@ int main(int argc, char **argv) {
     std::ofstream ofs;
     ofs.open("./raster2d.ppm");
     ofs << "P6\n" << w << " " << h << "\n255\n";
-    ofs.write((char *)framebuffer, w * h * 3);
+    ofs.write((char*)framebuffer, w * h * 3);
     ofs.close();
 
     delete[] framebuffer;

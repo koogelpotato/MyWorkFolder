@@ -13,36 +13,42 @@
 #include <string_view>
 #include <vector>
 
-namespace kgl_engine {
-static void gl_check_errors() {
+namespace kgl_engine
+{
+static void gl_check_errors()
+{
     using namespace std;
     const int err = static_cast<int>(glGetError());
-    if (err != GL_NO_ERROR) {
-        switch (err) {
-        case GL_INVALID_ENUM:
-            cerr << GL_INVALID_ENUM << endl;
-            break;
-        case GL_INVALID_VALUE:
-            cerr << GL_INVALID_VALUE << endl;
-            break;
-        case GL_INVALID_OPERATION:
-            cerr << GL_INVALID_OPERATION << endl;
-            break;
-        case GL_OUT_OF_MEMORY:
-            cerr << GL_OUT_OF_MEMORY << endl;
-            break;
-        case GL_INVALID_FRAMEBUFFER_OPERATION:
-            cerr << GL_INVALID_FRAMEBUFFER_OPERATION << endl;
-            break;
+    if (err != GL_NO_ERROR)
+    {
+        switch (err)
+        {
+            case GL_INVALID_ENUM:
+                cerr << GL_INVALID_ENUM << endl;
+                break;
+            case GL_INVALID_VALUE:
+                cerr << GL_INVALID_VALUE << endl;
+                break;
+            case GL_INVALID_OPERATION:
+                cerr << GL_INVALID_OPERATION << endl;
+                break;
+            case GL_OUT_OF_MEMORY:
+                cerr << GL_OUT_OF_MEMORY << endl;
+                break;
+            case GL_INVALID_FRAMEBUFFER_OPERATION:
+                cerr << GL_INVALID_FRAMEBUFFER_OPERATION << endl;
+                break;
         }
         assert(false);
     }
 }
-static void APIENTRY callback_opengl_debug(GLenum source, GLenum type,
-                                           GLenum id, GLenum severity,
-                                           GLsizei length,
-                                           const GLchar *message,
-                                           const void *userParam); 
+static void APIENTRY callback_opengl_debug(GLenum        source,
+                                           GLenum        type,
+                                           GLenum        id,
+                                           GLenum        severity,
+                                           GLsizei       length,
+                                           const GLchar* message,
+                                           const void*   userParam);
 std::istream&        operator>>(std::istream& is, vertex& v)
 {
     is >> v.x;
@@ -59,7 +65,16 @@ std::istream& operator>>(std::istream& is, triangle& t)
 }
 class gl_engine : public engine
 {
-    
+    std::string init(std::string_view config) final
+    {
+        using namespace std;
+        const int init_result = SDL_Init(SDL_INIT_VIDEO);
+        if (init_result != 0)
+        {
+            const char* err_message = SDL_GetError();
+            cerr << "error: failed call SDL_Init: " << err_message << endl;
+        }
+    }
 };
 
 } // namespace kgl_engine

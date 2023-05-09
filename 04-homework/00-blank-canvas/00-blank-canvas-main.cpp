@@ -2,27 +2,31 @@
 
 #include <iostream>
 
-int main(int, char **) {
-    const color green = {0, 255, 0};
+int main(int, char**)
+{
+    const color green = { 0, 255, 0 };
 
-    size_t width = 320;
+    size_t width  = 320;
     size_t height = 240;
 
     canvas image(width, height);
 
     std::fill(image.begin(), image.end(), green);
 
-    const char *file_name = "00_green_image.ppm";
+    const char* file_name = "00_green_image.ppm";
 
     image.save_image(file_name);
 
     canvas image_loaded(0, 0);
     image_loaded.load_image(file_name);
 
-    if (image != image_loaded) {
+    if (image != image_loaded)
+    {
         std::cerr << "image != image_loaded\n";
         return 1;
-    } else {
+    }
+    else
+    {
         std::cout << "image == image_loaded\n";
     }
     color new_color =
@@ -32,20 +36,24 @@ int main(int, char **) {
         width,
         height); // TODO ask about code refactoring, problem: code doubling
 
-    std::fill(inverted_image.begin(), inverted_image.end(),
+    std::fill(inverted_image.begin(),
+              inverted_image.end(),
               new_color); // fill the canvas with the new color
 
-    const char *inverted_file_name = "00_inverted_image.ppm";
+    const char* inverted_file_name = "00_inverted_image.ppm";
 
     inverted_image.save_image(inverted_file_name);
 
     canvas inverted_image_loaded(0, 0);
     inverted_image_loaded.load_image(inverted_file_name);
 
-    if (inverted_image != inverted_image_loaded) {
+    if (inverted_image != inverted_image_loaded)
+    {
         std::cerr << "inverted_image != inverted_image_loaded\n";
         return 1;
-    } else {
+    }
+    else
+    {
         std::cout << "inverted_image == inverted_image_loaded\n";
     }
 

@@ -1,10 +1,11 @@
 #include "03-indexed-triangle-render.hpp"
 
-int main(int, char **) {
-    constexpr color black = {0, 0, 0};
-    constexpr color green = {0, 255, 0};
+int main(int, char**)
+{
+    constexpr color black = { 0, 0, 0 };
+    constexpr color green = { 0, 255, 0 };
 
-    constexpr size_t width = 320;
+    constexpr size_t width  = 320;
     constexpr size_t height = 240;
 
     canvas image(width, height);
@@ -17,10 +18,12 @@ int main(int, char **) {
     constexpr int32_t step_x = (width - 1) / max_x;
     constexpr int32_t step_y = (height - 1) / max_y;
 
-    for (size_t i = 0; i <= max_y; ++i) {
-        for (size_t j = 0; j <= max_x; ++j) {
-            position v{static_cast<int>(j) * step_x,
-                       static_cast<int>(i) * step_y};
+    for (size_t i = 0; i <= max_y; ++i)
+    {
+        for (size_t j = 0; j <= max_x; ++j)
+        {
+            position v{ static_cast<int>(j) * step_x,
+                        static_cast<int>(i) * step_y };
 
             vertex_buffer.push_back(v);
         }
@@ -30,8 +33,10 @@ int main(int, char **) {
 
     std::vector<uint8_t> index_buffer;
 
-    for (size_t x = 0; x < max_x; ++x) {
-        for (size_t y = 0; y < max_y; ++y) {
+    for (size_t x = 0; x < max_x; ++x)
+    {
+        for (size_t y = 0; y < max_y; ++y)
+        {
             uint8_t index0 = static_cast<uint8_t>(y * (max_y + 1) + x);
             uint8_t index1 = static_cast<uint8_t>(index0 + (max_y + 1) + 1);
             uint8_t index2 = index1 - 1;

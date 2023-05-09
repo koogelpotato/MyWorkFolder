@@ -6,7 +6,8 @@
 #include <string>
 #include <unordered_map>
 
-enum keybinds {
+enum keybinds
+{
     KEY_PRESS_UP,
     KEY_PRESS_DOWN,
     KEY_PRESS_LEFT,

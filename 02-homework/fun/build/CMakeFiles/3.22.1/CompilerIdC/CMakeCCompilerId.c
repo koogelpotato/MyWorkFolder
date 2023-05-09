@@ -400,23 +400,23 @@
    getting matched.  Store it in a pointer rather than an array
    because some compilers will just produce instructions to fill the
    array rather than assigning a pointer to a static array.  */
-char const *info_compiler = "INFO"
+char const* info_compiler = "INFO"
                             ":"
                             "compiler[" COMPILER_ID "]";
 #ifdef SIMULATE_ID
-char const *info_simulate = "INFO"
+char const* info_simulate = "INFO"
                             ":"
                             "simulate[" SIMULATE_ID "]";
 #endif
 
 #ifdef __QNXNTO__
-char const *qnxnto = "INFO"
+char const* qnxnto = "INFO"
                      ":"
                      "qnxnto[]";
 #endif
 
 #if defined(__CRAYXT_COMPUTE_LINUX_TARGET)
-char const *info_cray = "INFO"
+char const* info_cray = "INFO"
                         ":"
                         "compiler_wrapper[CrayPrgEnv]";
 #endif
@@ -677,49 +677,49 @@ char const *info_cray = "INFO"
 
 /* Construct a string literal encoding the version number. */
 #ifdef COMPILER_VERSION
-char const *info_version = "INFO"
+char const* info_version = "INFO"
                            ":"
                            "compiler_version[" COMPILER_VERSION "]";
 
 /* Construct a string literal encoding the version number components. */
 #elif defined(COMPILER_VERSION_MAJOR)
-char const info_version[] = {'I',
-                             'N',
-                             'F',
-                             'O',
-                             ':',
-                             'c',
-                             'o',
-                             'm',
-                             'p',
-                             'i',
-                             'l',
-                             'e',
-                             'r',
-                             '_',
-                             'v',
-                             'e',
-                             'r',
-                             's',
-                             'i',
-                             'o',
-                             'n',
-                             '[',
-                             COMPILER_VERSION_MAJOR,
+char const  info_version[] = { 'I',
+                               'N',
+                               'F',
+                               'O',
+                               ':',
+                               'c',
+                               'o',
+                               'm',
+                               'p',
+                               'i',
+                               'l',
+                               'e',
+                               'r',
+                               '_',
+                               'v',
+                               'e',
+                               'r',
+                               's',
+                               'i',
+                               'o',
+                               'n',
+                               '[',
+                               COMPILER_VERSION_MAJOR,
 #ifdef COMPILER_VERSION_MINOR
-                             '.',
-                             COMPILER_VERSION_MINOR,
+                               '.',
+                               COMPILER_VERSION_MINOR,
 #ifdef COMPILER_VERSION_PATCH
-                             '.',
-                             COMPILER_VERSION_PATCH,
+                               '.',
+                               COMPILER_VERSION_PATCH,
 #ifdef COMPILER_VERSION_TWEAK
-                             '.',
-                             COMPILER_VERSION_TWEAK,
+                               '.',
+                               COMPILER_VERSION_TWEAK,
 #endif
 #endif
 #endif
-                             ']',
-                             '\0'};
+                               ']',
+                               '\0' };
 #endif
 
 /* Construct a string literal encoding the internal version number. */
@@ -729,9 +729,10 @@ char const info_version_internal[] = {
     'p', 'i', 'l', 'e', 'r', '_', 'v', 'e',
     'r', 's', 'i', 'o', 'n', '_', 'i', 'n',
     't', 'e', 'r', 'n', 'a', 'l', '[', COMPILER_VERSION_INTERNAL,
-    ']', '\0'};
+    ']', '\0'
+};
 #elif defined(COMPILER_VERSION_INTERNAL_STR)
-char const *info_version_internal =
+char const* info_version_internal =
     "INFO"
     ":"
     "compiler_version_internal[" COMPILER_VERSION_INTERNAL_STR "]";
@@ -739,55 +740,55 @@ char const *info_version_internal =
 
 /* Construct a string literal encoding the version number components. */
 #ifdef SIMULATE_VERSION_MAJOR
-char const info_simulate_version[] = {'I',
-                                      'N',
-                                      'F',
-                                      'O',
-                                      ':',
-                                      's',
-                                      'i',
-                                      'm',
-                                      'u',
-                                      'l',
-                                      'a',
-                                      't',
-                                      'e',
-                                      '_',
-                                      'v',
-                                      'e',
-                                      'r',
-                                      's',
-                                      'i',
-                                      'o',
-                                      'n',
-                                      '[',
-                                      SIMULATE_VERSION_MAJOR,
+char const info_simulate_version[] = { 'I',
+                                       'N',
+                                       'F',
+                                       'O',
+                                       ':',
+                                       's',
+                                       'i',
+                                       'm',
+                                       'u',
+                                       'l',
+                                       'a',
+                                       't',
+                                       'e',
+                                       '_',
+                                       'v',
+                                       'e',
+                                       'r',
+                                       's',
+                                       'i',
+                                       'o',
+                                       'n',
+                                       '[',
+                                       SIMULATE_VERSION_MAJOR,
 #ifdef SIMULATE_VERSION_MINOR
-                                      '.',
-                                      SIMULATE_VERSION_MINOR,
+                                       '.',
+                                       SIMULATE_VERSION_MINOR,
 #ifdef SIMULATE_VERSION_PATCH
-                                      '.',
-                                      SIMULATE_VERSION_PATCH,
+                                       '.',
+                                       SIMULATE_VERSION_PATCH,
 #ifdef SIMULATE_VERSION_TWEAK
-                                      '.',
-                                      SIMULATE_VERSION_TWEAK,
+                                       '.',
+                                       SIMULATE_VERSION_TWEAK,
 #endif
 #endif
 #endif
-                                      ']',
-                                      '\0'};
+                                       ']',
+                                       '\0' };
 #endif
 
 /* Construct the string literal in pieces to prevent the source from
    getting matched.  Store it in a pointer rather than an array
    because some compilers will just produce instructions to fill the
    array rather than assigning a pointer to a static array.  */
-char const *info_platform = "INFO"
+char const* info_platform = "INFO"
                             ":"
                             "platform[" PLATFORM_ID "]";
-char const *info_arch = "INFO"
-                        ":"
-                        "arch[" ARCHITECTURE_ID "]";
+char const* info_arch     = "INFO"
+                            ":"
+                            "arch[" ARCHITECTURE_ID "]";
 
 #if !defined(__STDC__) && !defined(__clang__)
 #if defined(_MSC_VER) || defined(__ibmxl__) || defined(__IBMC__)
@@ -806,11 +807,11 @@ char const *info_arch = "INFO"
 #else
 #define C_VERSION "90"
 #endif
-const char *info_language_standard_default = "INFO"
+const char* info_language_standard_default = "INFO"
                                              ":"
                                              "standard_default[" C_VERSION "]";
 
-const char *info_language_extensions_default = "INFO"
+const char* info_language_extensions_default = "INFO"
                                                ":"
                                                "extensions_default["
 /* !defined(_MSC_VER) to exclude Clang's MSVC compatibility mode. */
@@ -819,7 +820,7 @@ const char *info_language_extensions_default = "INFO"
     !defined(__STRICT_ANSI__) && !defined(_MSC_VER)
                                                "ON"
 #else
-                                               "OFF"
+                                                "OFF"
 #endif
                                                "]";
 
@@ -829,11 +830,11 @@ const char *info_language_extensions_default = "INFO"
 void main() {}
 #else
 #if defined(__CLASSIC_C__)
-int main(argc, argv)
-int argc;
-char *argv[];
+int   main(argc, argv)
+int   argc;
+char* argv[];
 #else
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 #endif
 {
     int require = 0;
