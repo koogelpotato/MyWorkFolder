@@ -16,7 +16,8 @@ find_package(OpenGL REQUIRED)
 target_link_libraries(glad PRIVATE OpenGL::GL)
 
 add_executable(blank_canvas
-    glcontext.cpp)
+    glcontext.cpp
+    main.cpp)
 
 target_link_libraries(blank_canvas PRIVATE SDL3::SDL3-shared)
 

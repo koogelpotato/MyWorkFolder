@@ -14,44 +14,40 @@
 #include <vector>
 
 #define MAX_SHADER_SZ 100000
+#define OM_GL_CHECK()                                                          \
+    {                                                                          \
+        const GLenum err = glGetError();                                       \
+        if (err != GL_NO_ERROR)                                                \
+        {                                                                      \
+            switch (err)                                                       \
+            {                                                                  \
+                case GL_INVALID_ENUM:                                          \
+                    std::cerr << "GL_INVALID_ENUM" << std::endl;               \
+                    break;                                                     \
+                case GL_INVALID_VALUE:                                         \
+                    std::cerr << "GL_INVALID_VALUE" << std::endl;              \
+                    break;                                                     \
+                case GL_INVALID_OPERATION:                                     \
+                    std::cerr << "GL_INVALID_OPERATION" << std::endl;          \
+                    break;                                                     \
+                case GL_INVALID_FRAMEBUFFER_OPERATION:                         \
+                    std::cerr << "GL_INVALID_FRAMEBUFFER_OPERATION"            \
+                              << std::endl;                                    \
+                    break;                                                     \
+                case GL_OUT_OF_MEMORY:                                         \
+                    std::cerr << "GL_OUT_OF_MEMORY" << std::endl;              \
+                    break;                                                     \
+            }                                                                  \
+            std::cerr << __FILE__ << ':' << __LINE__ << '(' << __FUNCTION__    \
+                      << ')' << std::endl;                                     \
+            assert(false);                                                     \
+        }                                                                      \
+    }
 
 namespace kgl_engine
 {
-static void gl_check_errors()
-{
-    using namespace std;
-    const int err = static_cast<int>(glGetError());
-    if (err != GL_NO_ERROR)
-    {
-        switch (err)
-        {
-            case GL_INVALID_ENUM:
-                cerr << GL_INVALID_ENUM << endl;
-                break;
-            case GL_INVALID_VALUE:
-                cerr << GL_INVALID_VALUE << endl;
-                break;
-            case GL_INVALID_OPERATION:
-                cerr << GL_INVALID_OPERATION << endl;
-                break;
-            case GL_OUT_OF_MEMORY:
-                cerr << GL_OUT_OF_MEMORY << endl;
-                break;
-            case GL_INVALID_FRAMEBUFFER_OPERATION:
-                cerr << GL_INVALID_FRAMEBUFFER_OPERATION << endl;
-                break;
-        }
-        assert(false);
-    }
-}
-static void APIENTRY callback_opengl_debug(GLenum        source,
-                                           GLenum        type,
-                                           GLenum        id,
-                                           GLenum        severity,
-                                           GLsizei       length,
-                                           const GLchar* message,
-                                           const void*   userParam);
-std::istream&        operator>>(std::istream& is, vertex& v)
+
+std::istream& operator>>(std::istream& is, vertex& v)
 {
     is >> v.x;
     is >> v.y;
@@ -65,7 +61,7 @@ std::istream& operator>>(std::istream& is, triangle& t)
     is >> t.vert[2];
     return is;
 }
-class gl_engine : public engine
+class gl_engine final : public engine
 {
     std::string init(std::string_view config) final
     {
@@ -78,8 +74,7 @@ class gl_engine : public engine
             cerr << "error: failed call SDL_Init: " << err_message << endl;
         }
 
-        SDL_Window* window =
-            SDL_CreateWindow("blank canvas", 512, 512, SDL_WINDOW_OPENGL);
+        window = SDL_CreateWindow("blank canvas", 512, 512, SDL_WINDOW_OPENGL);
         if (window == nullptr)
         {
             const char* err_message = SDL_GetError();
@@ -111,24 +106,27 @@ class gl_engine : public engine
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, gl_minor_ver);
         SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, gl_context_profile);
 
-        SDL_GLContext mainContext = SDL_GL_CreateContext(window);
+        SDL_GLContext context = SDL_GL_CreateContext(window);
 
-        int gl_funcitons =
+        if (context == nullptr)
+        {
+            std::cerr << "context not initialized" << std::endl;
+        }
+
+        int gl_functions =
             gladLoadGLES2Loader((GLADloadproc)SDL_GL_GetProcAddress);
-        if (gl_funcitons != 0)
+
+        if (gl_functions != 0)
         {
             cerr << "error: failed to initialize glad" << endl;
         }
-
-        glEnable(GL_DEBUG_OUTPUT);
-        glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-        glDebugMessageCallback(callback_opengl_debug, nullptr);
-        glDebugMessageControl(
-            GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+        program = create_shader_from_file("myshader.frag", "myshader.vert");
+        return "";
     }
-    GLuint load_shader_from_string(const char* vertex_shader_str,
-                                   const char* fragment_shader_str)
+    GLuint create_shader_from_string(const char* vertex_shader_str,
+                                     const char* fragment_shader_str) final
     {
+
         GLuint shader_program         = glCreateProgram();
         GLuint vertex_shader_handle   = glCreateShader(GL_VERTEX_SHADER);
         GLuint fragment_shader_handle = glCreateShader(GL_FRAGMENT_SHADER);
@@ -139,18 +137,16 @@ class gl_engine : public engine
             glGetShaderiv(vertex_shader_handle, GL_COMPILE_STATUS, &params);
             if (GL_TRUE != params)
             {
-                fprintf(stderr,
-                        "ERROR: vertex shader index %u did not compile\n",
-                        vertex_shader_handle);
+                std::cerr << "ERROR: vertex shader index"
+                          << vertex_shader_handle << "did not compile"
+                          << std::endl;
                 const int max_length    = 2048;
                 int       actual_length = 0;
                 char      slog[2048];
                 glGetShaderInfoLog(
                     vertex_shader_handle, max_length, &actual_length, slog);
-                fprintf(stderr,
-                        "shader info log for GL index %u:\n%s\n",
-                        vertex_shader_handle,
-                        slog);
+                std::cerr << "shader info log for GL index: "
+                          << vertex_shader_handle << " " << slog << std::endl;
 
                 glDeleteShader(vertex_shader_handle);
                 glDeleteShader(fragment_shader_handle);
@@ -167,18 +163,16 @@ class gl_engine : public engine
             glGetShaderiv(fragment_shader_handle, GL_COMPILE_STATUS, &params);
             if (GL_TRUE != params)
             {
-                fprintf(stderr,
-                        "ERROR: fragment shader index %u did not compile\n",
-                        fragment_shader_handle);
+                std::cerr << "ERROR: vertex shader index"
+                          << fragment_shader_handle << "did not compile"
+                          << std::endl;
                 const int max_length    = 2048;
                 int       actual_length = 0;
                 char      slog[2048];
                 glGetShaderInfoLog(
                     fragment_shader_handle, max_length, &actual_length, slog);
-                fprintf(stderr,
-                        "shader info log for GL index %u:\n%s\n",
-                        fragment_shader_handle,
-                        slog);
+                std::cerr << "shader info log for GL index: "
+                          << fragment_shader_handle << " " << slog << std::endl;
 
                 glDeleteShader(vertex_shader_handle);
                 glDeleteShader(fragment_shader_handle);
@@ -197,18 +191,15 @@ class gl_engine : public engine
             glGetProgramiv(shader_program, GL_LINK_STATUS, &params);
             if (GL_TRUE != params)
             {
-                fprintf(stderr,
-                        "ERROR: could not link shader program GL index %u\n",
-                        shader_program);
+                std::cerr << "ERROR: could not link shader program gl index "
+                          << shader_program << std::endl;
                 const int max_length    = 2048;
                 int       actual_length = 0;
                 char      plog[2048];
                 glGetProgramInfoLog(
                     shader_program, max_length, &actual_length, plog);
-                fprintf(stderr,
-                        "program info log for GL index %u:\n%s",
-                        shader_program,
-                        plog);
+                std::cerr << "program info log for GL index " << shader_program
+                          << plog << std::endl;
 
                 glDeleteProgram(shader_program);
                 return 0;
@@ -217,14 +208,13 @@ class gl_engine : public engine
 
         return shader_program;
     }
-    GLuint load_shader_from_file(const char* vertex_shader_filename,
-                                 const char* fragment_shader_filename)
+    GLuint create_shader_from_file(const char* vertex_shader_filename,
+                                   const char* fragment_shader_filename) final
     {
         assert(vertex_shader_filename && fragment_shader_filename);
 
-        printf("loading shader from files `%s` and `%s`\n",
-               vertex_shader_filename,
-               fragment_shader_filename);
+        std::cout << "loading shader from files: " << vertex_shader_filename
+                  << " and " << fragment_shader_filename << std::endl;
         char vs_shader_str[MAX_SHADER_SZ];
         char fs_shader_str[MAX_SHADER_SZ];
         vs_shader_str[0] = fs_shader_str[0] = '\0';
@@ -232,9 +222,8 @@ class gl_engine : public engine
             FILE* fp = fopen(vertex_shader_filename, "r");
             if (!fp)
             {
-                fprintf(stderr,
-                        "ERROR: could not open vertex shader file `%s`\n",
-                        vertex_shader_filename);
+                std::cerr << "ERROR: could not open vertex shader file"
+                          << vertex_shader_filename << std::endl;
                 return 0;
             }
             size_t count = fread(vs_shader_str, 1, MAX_SHADER_SZ - 1, fp);
@@ -246,9 +235,8 @@ class gl_engine : public engine
             FILE* fp = fopen(fragment_shader_filename, "r");
             if (!fp)
             {
-                fprintf(stderr,
-                        "ERROR: could not open fragment shader file `%s`\n",
-                        fragment_shader_filename);
+                std::cerr << "ERROR: could not open fragment shader file"
+                          << fragment_shader_filename << std::endl;
                 return 0;
             }
             size_t count = fread(fs_shader_str, 1, MAX_SHADER_SZ - 1, fp);
@@ -257,8 +245,140 @@ class gl_engine : public engine
             fclose(fp);
         }
 
-        return load_shader_from_string(vs_shader_str, fs_shader_str);
+        return create_shader_from_string(vs_shader_str, fs_shader_str);
     }
+    void hot_reload_shader_file(GLuint*     shader,
+                                const char* vertex_shader_filename,
+                                const char* fragment_shader_filename) final
+    {
+        assert(program && vertex_shader_filename && fragment_shader_filename);
+
+        GLuint reloaded_program = create_shader_from_file(
+            vertex_shader_filename, fragment_shader_filename);
+
+        if (reloaded_program)
+        {
+            glDeleteProgram(*shader);
+            *shader = reloaded_program;
+        }
+    }
+
+    bool input(bool& running) final
+    {
+        SDL_Event event;
+        while (SDL_PollEvent(&event))
+        {
+            if (event.type == SDL_EVENT_KEY_DOWN)
+            {
+                std::cout << "key pressed: "
+                          << SDL_GetKeyName(event.key.keysym.sym) << std::endl;
+            }
+            else if (event.type == SDL_EVENT_KEY_UP)
+            {
+                std::cout << "key released: "
+                          << SDL_GetKeyName(event.key.keysym.sym) << std::endl;
+            }
+            else if (event.type == SDL_EVENT_QUIT)
+            {
+                running = false;
+                SDL_Quit();
+                return EXIT_SUCCESS;
+            }
+        }
+        return EXIT_FAILURE;
+    }
+    void triangle_render(const triangle& t) final
+    {
+        glVertexAttribPointer(
+            0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), &t.vert[0]);
+        gl_check_errors();
+        glEnableVertexAttribArray(0);
+        gl_check_errors();
+        glValidateProgram(program);
+        gl_check_errors();
+        GLint validate_status = 0;
+        glGetProgramiv(program, GL_VALIDATE_STATUS, &validate_status);
+        gl_check_errors();
+        if (validate_status == GL_FALSE)
+        {
+            std::cerr << "Error linking program: " << std::endl;
+            throw std::runtime_error("error");
+        }
+        glDrawArrays(GL_TRIANGLES, 0, 3);
+        gl_check_errors();
+    }
+
+    void uninitialize() final
+    {
+        SDL_GL_DeleteContext(gl_context);
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+    }
+    void swap_buffer() final
+    {
+        SDL_GL_SwapWindow(window);
+
+        glClearColor(1.0f, 0.3f, 0.3f, 0.0f);
+        gl_check_errors();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+        gl_check_errors();
+    }
+    void gl_check_errors()
+    {
+        using namespace std;
+        const int err = static_cast<int>(glGetError());
+        if (err != GL_NO_ERROR)
+        {
+            switch (err)
+            {
+                case GL_INVALID_ENUM:
+                    cerr << GL_INVALID_ENUM << endl;
+                    break;
+                case GL_INVALID_VALUE:
+                    cerr << GL_INVALID_VALUE << endl;
+                    break;
+                case GL_INVALID_OPERATION:
+                    cerr << GL_INVALID_OPERATION << endl;
+                    break;
+                case GL_OUT_OF_MEMORY:
+                    cerr << GL_OUT_OF_MEMORY << endl;
+                    break;
+                case GL_INVALID_FRAMEBUFFER_OPERATION:
+                    cerr << GL_INVALID_FRAMEBUFFER_OPERATION << endl;
+                    break;
+            }
+
+            assert(false);
+        }
+    }
+
+private:
+    SDL_Window*   window     = nullptr;
+    GLuint        program    = 0;
+    SDL_GLContext gl_context = nullptr;
 };
+static bool engine_exist = false;
+engine*     create_engine()
+{
+    if (engine_exist)
+    {
+        throw std::runtime_error("engine exist");
+    }
+    engine_exist = true;
+    return new gl_engine();
+}
+void destroy_engine(engine* e)
+{
+    if (!engine_exist)
+    {
+        throw std::runtime_error("engine not created");
+    }
+    if (nullptr == e)
+    {
+        throw std::runtime_error("e is nullptr");
+    }
+    delete e;
+}
+engine::~engine() {}
 
 } // namespace kgl_engine
