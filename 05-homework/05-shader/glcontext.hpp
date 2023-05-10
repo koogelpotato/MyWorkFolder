@@ -34,11 +34,9 @@ public:
     virtual GLuint      load_shader_from_file(const char* vertex_shader_file,
                                               const char* fragment_shader_file) = 0;
     virtual void        hot_reload_shader_string(
-               GLuint*     shader,
                const char* vertex_shader_string,
                const char* fragment_shader_string)                        = 0;
-    virtual void hot_reload_shader_file(GLuint*     shader,
-                                        const char* vertex_shader_file,
+    virtual void hot_reload_shader_file(const char* vertex_shader_file,
                                         const char* fragment_shader_file) = 0;
     virtual bool input(int& isrunning)                                    = 0;
     virtual void triangle_render(const triangle&)                         = 0;
