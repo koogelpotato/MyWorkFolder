@@ -24,5 +24,11 @@ int main()
         {
             return EXIT_SUCCESS;
         }
+
+        kgl_engine::triangle tri;
+        engine->triangle_render(tri, 25, 15);
+        engine->swap_buffer();
     }
+    engine->uninitialize();
+    return EXIT_SUCCESS;
 }

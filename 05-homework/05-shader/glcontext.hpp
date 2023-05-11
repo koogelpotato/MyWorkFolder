@@ -44,7 +44,7 @@ public:
                                         const char* vertex_shader_file,
                                         const char* fragment_shader_file) = 0;
     virtual bool input(bool& running)                                     = 0;
-    virtual void triangle_render(const triangle&)                         = 0;
+    virtual void triangle_render(const triangle&, int count, float size)  = 0;
     virtual void uninitialize()                                           = 0;
     virtual void swap_buffer()                                            = 0;
 

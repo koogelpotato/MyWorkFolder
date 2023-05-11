@@ -7,6 +7,7 @@
 #include <chrono>
 #include <cmath>
 #include <exception>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -14,38 +15,36 @@
 #include <vector>
 
 #define MAX_SHADER_SZ 100000
-#define OM_GL_CHECK()                                                          \
-    {                                                                          \
-        const GLenum err = glGetError();                                       \
-        if (err != GL_NO_ERROR)                                                \
-        {                                                                      \
-            switch (err)                                                       \
-            {                                                                  \
-                case GL_INVALID_ENUM:                                          \
-                    std::cerr << "GL_INVALID_ENUM" << std::endl;               \
-                    break;                                                     \
-                case GL_INVALID_VALUE:                                         \
-                    std::cerr << "GL_INVALID_VALUE" << std::endl;              \
-                    break;                                                     \
-                case GL_INVALID_OPERATION:                                     \
-                    std::cerr << "GL_INVALID_OPERATION" << std::endl;          \
-                    break;                                                     \
-                case GL_INVALID_FRAMEBUFFER_OPERATION:                         \
-                    std::cerr << "GL_INVALID_FRAMEBUFFER_OPERATION"            \
-                              << std::endl;                                    \
-                    break;                                                     \
-                case GL_OUT_OF_MEMORY:                                         \
-                    std::cerr << "GL_OUT_OF_MEMORY" << std::endl;              \
-                    break;                                                     \
-            }                                                                  \
-            std::cerr << __FILE__ << ':' << __LINE__ << '(' << __FUNCTION__    \
-                      << ')' << std::endl;                                     \
-            assert(false);                                                     \
-        }                                                                      \
-    }
 
 namespace kgl_engine
 {
+void opengl_debug_callback(GLenum        source,
+                           GLenum        type,
+                           GLuint        id,
+                           GLenum        severity,
+                           GLsizei       length,
+                           const GLchar* message,
+                           const void*   userParam)
+{
+    std::cerr << "OpenGL Error:" << std::endl;
+    std::cerr << "  Source: " << source << std::endl;
+    std::cerr << "  Type: " << type << std::endl;
+    std::cerr << "  ID: " << id << std::endl;
+    std::cerr << "  Severity: " << severity << std::endl;
+    std::cerr << "  Message: " << message << std::endl;
+    std::cerr << std::endl;
+}
+
+void listen_opengl_errors()
+{
+    glEnable(GL_DEBUG_OUTPUT);
+    glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+
+    glDebugMessageCallback(opengl_debug_callback, nullptr);
+
+    glDebugMessageControl(
+        GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+}
 
 std::istream& operator>>(std::istream& is, vertex& v)
 {
@@ -113,28 +112,33 @@ class gl_engine final : public engine
             std::cerr << "context not initialized" << std::endl;
         }
 
-        int gl_functions =
-            gladLoadGLES2Loader((GLADloadproc)SDL_GL_GetProcAddress);
-
-        if (gl_functions != 0)
+        if (gladLoadGLES2Loader((GLADloadproc)SDL_GL_GetProcAddress) == 0)
         {
             cerr << "error: failed to initialize glad" << endl;
         }
-        program = create_shader_from_file("myshader.frag", "myshader.vert");
+
+        program = create_shader_from_file("shader/filemyshader.vert",
+                                          "shader/filemyshader.frag");
         return "";
     }
     GLuint create_shader_from_string(const char* vertex_shader_str,
                                      const char* fragment_shader_str) final
     {
 
-        GLuint shader_program         = glCreateProgram();
-        GLuint vertex_shader_handle   = glCreateShader(GL_VERTEX_SHADER);
+        GLuint shader_program = glCreateProgram();
+        listen_opengl_errors();
+        GLuint vertex_shader_handle = glCreateShader(GL_VERTEX_SHADER);
+        listen_opengl_errors();
         GLuint fragment_shader_handle = glCreateShader(GL_FRAGMENT_SHADER);
+        listen_opengl_errors();
         { // compile shader and check for errors
             glShaderSource(vertex_shader_handle, 1, &vertex_shader_str, NULL);
+            listen_opengl_errors();
             glCompileShader(vertex_shader_handle);
+            listen_opengl_errors();
             int params = -1;
             glGetShaderiv(vertex_shader_handle, GL_COMPILE_STATUS, &params);
+            listen_opengl_errors();
             if (GL_TRUE != params)
             {
                 std::cerr << "ERROR: vertex shader index"
@@ -145,12 +149,16 @@ class gl_engine final : public engine
                 char      slog[2048];
                 glGetShaderInfoLog(
                     vertex_shader_handle, max_length, &actual_length, slog);
+                listen_opengl_errors();
                 std::cerr << "shader info log for GL index: "
                           << vertex_shader_handle << " " << slog << std::endl;
 
                 glDeleteShader(vertex_shader_handle);
+                listen_opengl_errors();
                 glDeleteShader(fragment_shader_handle);
+                listen_opengl_errors();
                 glDeleteProgram(shader_program);
+                listen_opengl_errors();
                 return 0;
             }
         }
@@ -158,9 +166,12 @@ class gl_engine final : public engine
         { // compile shader and check for errors
             glShaderSource(
                 fragment_shader_handle, 1, &fragment_shader_str, NULL);
+            listen_opengl_errors();
             glCompileShader(fragment_shader_handle);
+            listen_opengl_errors();
             int params = -1;
             glGetShaderiv(fragment_shader_handle, GL_COMPILE_STATUS, &params);
+            listen_opengl_errors();
             if (GL_TRUE != params)
             {
                 std::cerr << "ERROR: vertex shader index"
@@ -173,10 +184,13 @@ class gl_engine final : public engine
                     fragment_shader_handle, max_length, &actual_length, slog);
                 std::cerr << "shader info log for GL index: "
                           << fragment_shader_handle << " " << slog << std::endl;
-
+                listen_opengl_errors();
                 glDeleteShader(vertex_shader_handle);
+                listen_opengl_errors();
                 glDeleteShader(fragment_shader_handle);
+                listen_opengl_errors();
                 glDeleteProgram(shader_program);
+                listen_opengl_errors();
                 return 0;
             }
         }
@@ -185,10 +199,14 @@ class gl_engine final : public engine
         glAttachShader(shader_program, vertex_shader_handle);
         { // link program and check for errors
             glLinkProgram(shader_program);
+            listen_opengl_errors();
             glDeleteShader(vertex_shader_handle);
+            listen_opengl_errors();
             glDeleteShader(fragment_shader_handle);
+            listen_opengl_errors();
             int params = -1;
             glGetProgramiv(shader_program, GL_LINK_STATUS, &params);
+            listen_opengl_errors();
             if (GL_TRUE != params)
             {
                 std::cerr << "ERROR: could not link shader program gl index "
@@ -198,55 +216,44 @@ class gl_engine final : public engine
                 char      plog[2048];
                 glGetProgramInfoLog(
                     shader_program, max_length, &actual_length, plog);
+                listen_opengl_errors();
                 std::cerr << "program info log for GL index " << shader_program
                           << plog << std::endl;
 
                 glDeleteProgram(shader_program);
+                listen_opengl_errors();
                 return 0;
             }
         }
 
         return shader_program;
     }
+
+    std::string load_file(std::string_view path)
+    {
+        std::cout << path << "\tloading" << std::endl;
+        std::ifstream file(path.data(), std::ios_base::in | std::ios_base::ate);
+        file.exceptions(std::ios_base::failbit);
+        auto        size = file.tellg();
+        std::string result(size, '\0');
+        file.seekg(0);
+        file.read(&result[0], size);
+        return result;
+    }
     GLuint create_shader_from_file(const char* vertex_shader_filename,
                                    const char* fragment_shader_filename) final
     {
         assert(vertex_shader_filename && fragment_shader_filename);
 
-        std::cout << "loading shader from files: " << vertex_shader_filename
-                  << " and " << fragment_shader_filename << std::endl;
-        char vs_shader_str[MAX_SHADER_SZ];
-        char fs_shader_str[MAX_SHADER_SZ];
-        vs_shader_str[0] = fs_shader_str[0] = '\0';
-        { // read vertex shader file into a buffer
-            FILE* fp = fopen(vertex_shader_filename, "r");
-            if (!fp)
-            {
-                std::cerr << "ERROR: could not open vertex shader file"
-                          << vertex_shader_filename << std::endl;
-                return 0;
-            }
-            size_t count = fread(vs_shader_str, 1, MAX_SHADER_SZ - 1, fp);
-            assert(count < MAX_SHADER_SZ - 1); // file was too long
-            vs_shader_str[count] = '\0';
-            fclose(fp);
-        }
-        { // read fragment shader file into a buffer
-            FILE* fp = fopen(fragment_shader_filename, "r");
-            if (!fp)
-            {
-                std::cerr << "ERROR: could not open fragment shader file"
-                          << fragment_shader_filename << std::endl;
-                return 0;
-            }
-            size_t count = fread(fs_shader_str, 1, MAX_SHADER_SZ - 1, fp);
-            assert(count < MAX_SHADER_SZ - 1); // file was too long
-            fs_shader_str[count] = '\0';
-            fclose(fp);
-        }
+        std::cout << "loading shader from file: " << vertex_shader_filename
+                  << "and: " << fragment_shader_filename << std::endl;
+        auto vs_shader_str = load_file(vertex_shader_filename);
+        auto fs_shader_str = load_file(fragment_shader_filename);
 
-        return create_shader_from_string(vs_shader_str, fs_shader_str);
+        return create_shader_from_string(vs_shader_str.c_str(),
+                                         fs_shader_str.c_str());
     }
+
     void hot_reload_shader_file(GLuint*     shader,
                                 const char* vertex_shader_filename,
                                 const char* fragment_shader_filename) final
@@ -259,6 +266,7 @@ class gl_engine final : public engine
         if (reloaded_program)
         {
             glDeleteProgram(*shader);
+            listen_opengl_errors();
             *shader = reloaded_program;
         }
     }
@@ -287,25 +295,65 @@ class gl_engine final : public engine
         }
         return EXIT_FAILURE;
     }
-    void triangle_render(const triangle& t) final
+    void triangle_render(const triangle& t, int count, float size) final
     {
-        glVertexAttribPointer(
-            0, 3, GL_FLOAT, GL_FALSE, sizeof(vertex), &t.vert[0]);
-        gl_check_errors();
-        glEnableVertexAttribArray(0);
-        gl_check_errors();
-        glValidateProgram(program);
-        gl_check_errors();
-        GLint validate_status = 0;
-        glGetProgramiv(program, GL_VALIDATE_STATUS, &validate_status);
-        gl_check_errors();
-        if (validate_status == GL_FALSE)
+        std::vector<float> colors;
+        for (int i = 0; i < count * 3 * 3; ++i)
         {
-            std::cerr << "Error linking program: " << std::endl;
-            throw std::runtime_error("error");
+            colors.push_back(static_cast<float>(rand()) /
+                             static_cast<float>(RAND_MAX));
         }
-        glDrawArrays(GL_TRIANGLES, 0, 3);
-        gl_check_errors();
+
+        std::vector<float> vertices;
+        vertices.reserve(count * 3 * 3);
+        for (int i = 0; i < count; ++i)
+        {
+            float x = static_cast<float>(rand()) /
+                          static_cast<float>(RAND_MAX) * size -
+                      size / 2.0f;
+            float y = static_cast<float>(rand()) /
+                          static_cast<float>(RAND_MAX) * size -
+                      size / 2.0f;
+            float z = 0.0f;
+            vertices.push_back(x);
+            vertices.push_back(y);
+            vertices.push_back(z);
+
+            x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
+                    size -
+                size / 2.0f;
+            y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
+                    size -
+                size / 2.0f;
+            z = 0.0f;
+            vertices.push_back(x);
+            vertices.push_back(y);
+            vertices.push_back(z);
+
+            x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
+                    size -
+                size / 2.0f;
+            y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
+                    size -
+                size / 2.0f;
+            z = 0.0f;
+            vertices.push_back(x);
+            vertices.push_back(y);
+            vertices.push_back(z);
+        }
+
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices.data());
+        listen_opengl_errors();
+        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, colors.data());
+        listen_opengl_errors();
+
+        glEnableVertexAttribArray(0);
+        listen_opengl_errors();
+        glEnableVertexAttribArray(1);
+        listen_opengl_errors();
+
+        glDrawArrays(GL_TRIANGLES, 0, count * 3);
+        listen_opengl_errors();
     }
 
     void uninitialize() final
@@ -318,38 +366,10 @@ class gl_engine final : public engine
     {
         SDL_GL_SwapWindow(window);
 
-        glClearColor(1.0f, 0.3f, 0.3f, 0.0f);
-        gl_check_errors();
+        glClearColor(1.0f, 0.0f, 0.0f, 0.0f);
+        listen_opengl_errors();
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        gl_check_errors();
-    }
-    void gl_check_errors()
-    {
-        using namespace std;
-        const int err = static_cast<int>(glGetError());
-        if (err != GL_NO_ERROR)
-        {
-            switch (err)
-            {
-                case GL_INVALID_ENUM:
-                    cerr << GL_INVALID_ENUM << endl;
-                    break;
-                case GL_INVALID_VALUE:
-                    cerr << GL_INVALID_VALUE << endl;
-                    break;
-                case GL_INVALID_OPERATION:
-                    cerr << GL_INVALID_OPERATION << endl;
-                    break;
-                case GL_OUT_OF_MEMORY:
-                    cerr << GL_OUT_OF_MEMORY << endl;
-                    break;
-                case GL_INVALID_FRAMEBUFFER_OPERATION:
-                    cerr << GL_INVALID_FRAMEBUFFER_OPERATION << endl;
-                    break;
-            }
-
-            assert(false);
-        }
+        listen_opengl_errors();
     }
 
 private:

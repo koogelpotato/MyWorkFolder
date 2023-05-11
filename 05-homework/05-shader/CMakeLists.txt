@@ -4,21 +4,21 @@ project(blank_canvas)
 
 
 add_library(glad SHARED
+    glcontext.cpp
+    glcontext.hpp
     glad/glad.h
     glad/glad.c
     KHR/khrplatform.h)
 
-target_include_directories(glad PRIVATE ${CMAKE_CURRENT_SOURCE_DIR})
 find_package(SDL3 REQUIRED)
 find_package(OpenGL REQUIRED)
 
+file(GLOB_RECURSE SHADER shader/*.*)
+file(COPY ${SHADER} DESTINATION ./shader/)
 
-target_link_libraries(glad PRIVATE OpenGL::GL)
+target_link_libraries(glad PRIVATE OpenGL::GL SDL3::SDL3-shared)
 
 add_executable(blank_canvas
-    glcontext.cpp
     main.cpp)
-
-target_link_libraries(blank_canvas PRIVATE SDL3::SDL3-shared)
 
 target_link_libraries(blank_canvas PRIVATE glad)
