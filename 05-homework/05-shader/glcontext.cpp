@@ -7,24 +7,19 @@
 #include <chrono>
 #include <cmath>
 #include <exception>
-#include <fstream>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
 #include <string_view>
 #include <vector>
+#include <fstream>
 
-#define MAX_SHADER_SZ 100000
+#define MAX_SHADER_SZ 100000 //TO DO Fix issues, check uniforms
 
 namespace kgl_engine
 {
-void opengl_debug_callback(GLenum        source,
-                           GLenum        type,
-                           GLuint        id,
-                           GLenum        severity,
-                           GLsizei       length,
-                           const GLchar* message,
-                           const void*   userParam)
+    void opengl_debug_callback(GLenum source, GLenum type, GLuint id, GLenum severity,
+                               GLsizei length, const GLchar* message, const void* userParam)
 {
     std::cerr << "OpenGL Error:" << std::endl;
     std::cerr << "  Source: " << source << std::endl;
@@ -42,8 +37,7 @@ void listen_opengl_errors()
 
     glDebugMessageCallback(opengl_debug_callback, nullptr);
 
-    glDebugMessageControl(
-        GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
+    glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, nullptr, GL_TRUE);
 }
 
 std::istream& operator>>(std::istream& is, vertex& v)
@@ -116,18 +110,17 @@ class gl_engine final : public engine
         {
             cerr << "error: failed to initialize glad" << endl;
         }
-
-        program = create_shader_from_file("shader/filemyshader.vert",
-                                          "shader/filemyshader.frag");
+        
+        program = create_shader_from_file("shader/filemyshader.vert", "shader/filemyshader.frag");
         return "";
     }
     GLuint create_shader_from_string(const char* vertex_shader_str,
                                      const char* fragment_shader_str) final
     {
 
-        GLuint shader_program = glCreateProgram();
+        GLuint shader_program         = glCreateProgram();
         listen_opengl_errors();
-        GLuint vertex_shader_handle = glCreateShader(GL_VERTEX_SHADER);
+        GLuint vertex_shader_handle   = glCreateShader(GL_VERTEX_SHADER);
         listen_opengl_errors();
         GLuint fragment_shader_handle = glCreateShader(GL_FRAGMENT_SHADER);
         listen_opengl_errors();
@@ -149,7 +142,7 @@ class gl_engine final : public engine
                 char      slog[2048];
                 glGetShaderInfoLog(
                     vertex_shader_handle, max_length, &actual_length, slog);
-                listen_opengl_errors();
+                    listen_opengl_errors();
                 std::cerr << "shader info log for GL index: "
                           << vertex_shader_handle << " " << slog << std::endl;
 
@@ -166,7 +159,7 @@ class gl_engine final : public engine
         { // compile shader and check for errors
             glShaderSource(
                 fragment_shader_handle, 1, &fragment_shader_str, NULL);
-            listen_opengl_errors();
+                listen_opengl_errors();
             glCompileShader(fragment_shader_handle);
             listen_opengl_errors();
             int params = -1;
@@ -216,7 +209,7 @@ class gl_engine final : public engine
                 char      plog[2048];
                 glGetProgramInfoLog(
                     shader_program, max_length, &actual_length, plog);
-                listen_opengl_errors();
+                    listen_opengl_errors();
                 std::cerr << "program info log for GL index " << shader_program
                           << plog << std::endl;
 
@@ -228,16 +221,16 @@ class gl_engine final : public engine
 
         return shader_program;
     }
-
+    
     std::string load_file(std::string_view path)
     {
         std::cout << path << "\tloading" << std::endl;
         std::ifstream file(path.data(), std::ios_base::in | std::ios_base::ate);
         file.exceptions(std::ios_base::failbit);
-        auto        size = file.tellg();
-        std::string result(size, '\0');
+        auto size = file.tellg();
+        std::string result(size,'\0');
         file.seekg(0);
-        file.read(&result[0], size);
+        file.read(&result[0],size);
         return result;
     }
     GLuint create_shader_from_file(const char* vertex_shader_filename,
@@ -245,14 +238,15 @@ class gl_engine final : public engine
     {
         assert(vertex_shader_filename && fragment_shader_filename);
 
-        std::cout << "loading shader from file: " << vertex_shader_filename
-                  << "and: " << fragment_shader_filename << std::endl;
-        auto vs_shader_str = load_file(vertex_shader_filename);
+        std::cout << "loading shader from file: " << vertex_shader_filename << "and: "
+                    << fragment_shader_filename<< std::endl; 
+        auto vs_shader_str  = load_file(vertex_shader_filename);
         auto fs_shader_str = load_file(fragment_shader_filename);
 
-        return create_shader_from_string(vs_shader_str.c_str(),
-                                         fs_shader_str.c_str());
+        return create_shader_from_string(vs_shader_str.c_str(), fs_shader_str.c_str());
     }
+
+    
 
     void hot_reload_shader_file(GLuint*     shader,
                                 const char* vertex_shader_filename,
@@ -295,65 +289,70 @@ class gl_engine final : public engine
         }
         return EXIT_FAILURE;
     }
-    void triangle_render(const triangle& t, int count, float size) final
+    void triangle_render(const triangle& t,int count, float size) final
     {
-        std::vector<float> colors;
-        for (int i = 0; i < count * 3 * 3; ++i)
-        {
-            colors.push_back(static_cast<float>(rand()) /
-                             static_cast<float>(RAND_MAX));
-        }
+    std::vector<float> colors;
+    for (int i = 0; i < count * 3 * 3; ++i)
+    {
+        colors.push_back(static_cast<float>(rand()) / static_cast<float>(RAND_MAX));
+    }
 
-        std::vector<float> vertices;
-        vertices.reserve(count * 3 * 3);
-        for (int i = 0; i < count; ++i)
-        {
-            float x = static_cast<float>(rand()) /
-                          static_cast<float>(RAND_MAX) * size -
-                      size / 2.0f;
-            float y = static_cast<float>(rand()) /
-                          static_cast<float>(RAND_MAX) * size -
-                      size / 2.0f;
-            float z = 0.0f;
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
+ 
+    std::vector<float> vertices;
+    vertices.reserve(count * 3 * 3);
+    for (int i = 0; i < count; ++i)
+    {
+        float x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * size - size / 2.0f;
+        float y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * size - size / 2.0f;
+        float z = 0.0f;
+        vertices.push_back(x);
+        vertices.push_back(y);
+        vertices.push_back(z);
 
-            x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
-                    size -
-                size / 2.0f;
-            y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
-                    size -
-                size / 2.0f;
-            z = 0.0f;
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
+        x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * size - size / 2.0f;
+        y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * size - size / 2.0f;
+        z = 0.0f;
+        vertices.push_back(x);
+        vertices.push_back(y);
+        vertices.push_back(z);
 
-            x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
-                    size -
-                size / 2.0f;
-            y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) *
-                    size -
-                size / 2.0f;
-            z = 0.0f;
-            vertices.push_back(x);
-            vertices.push_back(y);
-            vertices.push_back(z);
-        }
+        x = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * size - size / 2.0f;
+        y = static_cast<float>(rand()) / static_cast<float>(RAND_MAX) * size - size / 2.0f;
+        z = 0.0f;
+        vertices.push_back(x);
+        vertices.push_back(y);
+        vertices.push_back(z);
+    }
 
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vertices.data());
-        listen_opengl_errors();
-        glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 0, colors.data());
-        listen_opengl_errors();
+    
+    glVertexAttribPointer(
+        0,          
+        3,          
+        GL_FLOAT,   
+        GL_FALSE,   
+        0,          
+        vertices.data() 
+    );
+    listen_opengl_errors();
+    glVertexAttribPointer(
+        1,          
+        3,          
+        GL_FLOAT,   
+        GL_FALSE,   
+        0,          
+        colors.data()   
+    );
+    listen_opengl_errors();
 
-        glEnableVertexAttribArray(0);
-        listen_opengl_errors();
-        glEnableVertexAttribArray(1);
-        listen_opengl_errors();
+    
+    glEnableVertexAttribArray(0);
+    listen_opengl_errors();
+    glEnableVertexAttribArray(1);
+    listen_opengl_errors();
 
-        glDrawArrays(GL_TRIANGLES, 0, count * 3);
-        listen_opengl_errors();
+    
+    glDrawArrays(GL_TRIANGLES, 0, count * 3); 
+    listen_opengl_errors();
     }
 
     void uninitialize() final
