@@ -21,7 +21,7 @@ Game::~Game()
 void Game::init_game()
 {
     
-    Resource_Manager::load_shader("shaders/sprite.vs", "shaders/sprite.frag", "sprite");
+    Resource_Manager::load_shader("sprite.vs", "sprite.frag", "sprite");
 
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->width), 
         static_cast<float>(this->height), 0.0f, -1.0f, 1.0f);
@@ -30,7 +30,7 @@ void Game::init_game()
 
     renderer = new Sprite_Renderer(Resource_Manager::get_shader("sprite"));
 
-    Resource_Manager::load_texture("textures/awesomeface.png", true, "face");
+    Resource_Manager::load_texture("skull.png", true, "skull");
 }
 
 void Game::update(float dt)
@@ -45,5 +45,5 @@ void Game::proccess_input(float dt)
 
 void Game::render()
 {
-    renderer->draw_sprite(Resource_Manager::get_texture("face"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    renderer->draw_sprite(Resource_Manager::get_texture("skull"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
 }
