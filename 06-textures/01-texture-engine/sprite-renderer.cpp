@@ -31,7 +31,7 @@ void Sprite_Renderer::draw_sprite(Texture &texture, glm::vec2 position, glm::vec
     texture.bind();
 
     glBindVertexArray(this->quadVAO);
-    glDrawArrays(GL_TEXTURE0, 0, 6);
+    glDrawArrays(GL_TEXTURE0, GL_TRIANGLES, 6);
     glBindVertexArray(0);
 }
 

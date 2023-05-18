@@ -40,7 +40,7 @@ void Game::update(float dt)
 
 void Game::proccess_input(float dt)
 {
-   
+    
 }
 
 void Game::render()

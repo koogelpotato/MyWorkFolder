@@ -54,16 +54,16 @@ Shader Resource_Manager::load_shader_from_file(const char *vertex_shader_file, c
         
         std::ifstream vertexShaderFile(vertex_shader_file);
         std::ifstream fragmentShaderFile(fragment_shader_file);
-        std::stringstream vShaderStream, fShaderStream;
+        std::stringstream vertex_shader_stream, fragment_shader_stream;
 
-        vShaderStream << vertexShaderFile.rdbuf();
-        fShaderStream << fragmentShaderFile.rdbuf();
+        vertex_shader_stream << vertexShaderFile.rdbuf();
+        fragment_shader_stream << fragmentShaderFile.rdbuf();
         
         vertexShaderFile.close();
         fragmentShaderFile.close();
         
-        vertexCode = vShaderStream.str();
-        fragmentCode = fShaderStream.str();
+        vertexCode = vertex_shader_stream.str();
+        fragmentCode = fragment_shader_stream.str();
         
         
     }
