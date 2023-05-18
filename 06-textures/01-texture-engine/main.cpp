@@ -91,9 +91,10 @@ int main(int arc, char *argv[])
         Test.update(delta_time);
 
 
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+        glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
         Test.render();
+        SDL_GL_SwapWindow(window);
     }
 
 }

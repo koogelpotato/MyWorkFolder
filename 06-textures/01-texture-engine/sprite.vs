@@ -1,4 +1,5 @@
 #version 320 es
+precision highp float;
 layout (location = 0) in vec4 vertex; 
 
 out vec2 TexCoords;

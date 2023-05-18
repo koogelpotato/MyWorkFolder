@@ -21,7 +21,7 @@ Game::~Game()
 void Game::init_game()
 {
     
-    Resource_Manager::load_shader("sprite.vs", "sprite.frag", "sprite");
+    Resource_Manager::load_shader("/home/koogel/.config/MyWorkFolder/06-textures/01-texture-engine/sprite.vs", "/home/koogel/.config/MyWorkFolder/06-textures/01-texture-engine/sprite.frag", "sprite");
 
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->width), 
         static_cast<float>(this->height), 0.0f, -1.0f, 1.0f);
@@ -30,7 +30,7 @@ void Game::init_game()
 
     renderer = new Sprite_Renderer(Resource_Manager::get_shader("sprite"));
 
-    Resource_Manager::load_texture("skull.png", true, "skull");
+    Resource_Manager::load_texture("/home/koogel/.config/MyWorkFolder/06-textures/01-texture-engine/skull.png", true, "skull");
 }
 
 void Game::update(float dt)
@@ -45,5 +45,5 @@ void Game::proccess_input(float dt)
 
 void Game::render()
 {
-    renderer->draw_sprite(Resource_Manager::get_texture("skull"), glm::vec2(200.0f, 200.0f), glm::vec2(300.0f, 400.0f), 45.0f, glm::vec3(0.0f, 1.0f, 0.0f));
+    renderer->draw_sprite(Resource_Manager::get_texture("skull"), glm::vec2(100.0f, 200.0f), glm::vec2(360.0f, 360.0f), 180.0f, glm::vec3(0.0f, 0.0f, 0.0f));
 }

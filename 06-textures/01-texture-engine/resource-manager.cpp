@@ -48,7 +48,6 @@ Shader Resource_Manager::load_shader_from_file(const char *vertex_shader_file, c
     
     std::string vertexCode;
     std::string fragmentCode;
-    std::string geometryCode;
     try
     {
         
