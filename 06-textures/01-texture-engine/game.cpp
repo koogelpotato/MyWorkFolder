@@ -43,7 +43,7 @@ void Game::init_game()
 
 void Game::update(float dt)
 {
-    
+    //TO DO add update
 }
 
 void Game::proccess_input(float dt)
