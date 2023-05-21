@@ -48,96 +48,57 @@ void Game::update(float dt)
 
 void Game::proccess_input(float dt)
 {
-    SDL_Event event;
+     SDL_Event event;
     if (this->State == GAME_ACTIVE)
     {
         float velocity = PLAYER_VELOCITY * dt;
-        /*if (this->keys[SDL_SCANCODE_A])
-        {
-            if (player->position.x >= 0.0f)
-            {
-                player->position.x -= velocity;
-                player->rotation = 270.0f;;
-            }
-                
-        }
-        if (this->keys[SDL_SCANCODE_D])
-        {
-            if (player->position.x <= this->width - player->size.x)
-            {
-                player->position.x += velocity;
-                player->rotation = 90.0f;
-            }
-                
-        }
-        if (this->keys[SDL_SCANCODE_S])
-        {
-            if (player->position.y <= this->height - player->size.y)
-            {
-                player->position.y += velocity;
-                player->rotation = 180.0f;
-            }
-                
-        }
-        if (this->keys[SDL_SCANCODE_W])
-        {
-            if (player->position.y >= 0.0f)
-            {
-                player->position.y += velocity;
-                player->rotation = 0.0f;
-            }
-                
-        }*/
 
-        while(SDL_PollEvent(&event))
+        while (SDL_PollEvent(&event))
         {
-            switch(event.type)
+            switch (event.type)
             {
                 case SDL_EVENT_KEY_DOWN:
                     switch (event.key.keysym.sym)
                     {
-                        case SDL_SCANCODE_A:
+                        case SDLK_a:
                             if (player->position.x >= 0.0f)
                             {
                                 player->position.x -= velocity;
-                                player->rotation = 270.0f;;
+                                player->rotation = 270.0f;
                             }
                             break;
-                        case SDL_SCANCODE_D:
+                        case SDLK_d:
                             if (player->position.x <= this->width - player->size.x)
                             {
                                 player->position.x += velocity;
                                 player->rotation = 90.0f;
                             }
                             break;
-                        case SDL_SCANCODE_W:
+                        case SDLK_w:
                             if (player->position.y >= 0.0f)
                             {
-                                player->position.y += velocity;
+                                player->position.y -= velocity;
                                 player->rotation = 0.0f;
                             }
                             break;
-                        case SDL_SCANCODE_S:
+                        case SDLK_s:
                             if (player->position.y <= this->height - player->size.y)
                             {
                                 player->position.y += velocity;
                                 player->rotation = 180.0f;
                             }
-                            break;    
+                            break;
                         default:
-                        break;
+                            break;
                     }
+                    break;
                 case SDL_EVENT_QUIT:
-                    this->State = GAME_EXIT;
+                    SDL_Quit();
                     break;
                 default:
                     break;
-
             }
-                
-
-        }
-    }
+}    }
 }
 
 void Game::render()

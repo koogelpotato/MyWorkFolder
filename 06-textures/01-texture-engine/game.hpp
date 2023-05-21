@@ -11,8 +11,8 @@ enum GameState{
     GAME_EXIT
 };
 
-const glm::vec2 PLAYER_SIZE(100.0f, 20.0f);
-const float PLAYER_VELOCITY(500.0f);
+const glm::vec2 PLAYER_SIZE(360.0f, 360.0f);
+const float PLAYER_VELOCITY(100.0f);
 
 class Game{
     public:
