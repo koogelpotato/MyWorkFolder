@@ -2,12 +2,17 @@
 
 #include "glad/glad.h"
 #include <SDL3/SDL.h>
+#include <glm/glm.hpp>
 
 enum GameState{
     GAME_ACTIVE,
     GAME_MENU,
-    GAME_WIN
+    GAME_WIN,
+    GAME_EXIT
 };
+
+const glm::vec2 PLAYER_SIZE(100.0f, 20.0f);
+const float PLAYER_VELOCITY(500.0f);
 
 class Game{
     public:
