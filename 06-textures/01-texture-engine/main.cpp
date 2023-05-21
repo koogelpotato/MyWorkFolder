@@ -12,8 +12,6 @@ const unsigned int SCREEN_HEIGHT = 600;
 
 Game Test(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-
-
 int main(int arc, char *argv[])
 {
     const int sdl_init = SDL_Init(SDL_INIT_VIDEO);
@@ -98,8 +96,5 @@ int main(int arc, char *argv[])
         Test.render();
         SDL_GL_SwapWindow(window);
     }
-    Resource_Manager::clear();
-    SDL_Quit();
-    return   0;
-}
 
+}

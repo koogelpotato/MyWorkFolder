@@ -16,8 +16,6 @@ add_library(image_engine
     sprite-renderer.cpp
     texture.cpp
     game.cpp
-    game-object.cpp
-    game-object.hpp
     )  
 add_library(loader
 stb_image.h
