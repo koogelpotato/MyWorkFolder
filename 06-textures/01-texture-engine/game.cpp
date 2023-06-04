@@ -25,7 +25,7 @@ Game::~Game()
 void Game::init_game()
 {
     
-    Resource_Manager::load_shader("/home/koogel/.config/MyWorkFolder/06-textures/01-texture-engine/sprite.vs", "/home/koogel/.config/MyWorkFolder/06-textures/01-texture-engine/sprite.frag", "sprite");
+    Resource_Manager::load_shader("//home/koogel/MyWorkFolder/06-textures/01-texture-engine/sprite.vs", "/home/koogel/MyWorkFolder/06-textures/01-texture-engine/sprite.frag", "sprite");
 
     glm::mat4 projection = glm::ortho(0.0f, static_cast<float>(this->width), 
         static_cast<float>(this->height), 0.0f, -1.0f, 1.0f);
@@ -34,7 +34,7 @@ void Game::init_game()
 
     renderer = new Sprite_Renderer(Resource_Manager::get_shader("sprite"));
 
-    Resource_Manager::load_texture("/home/koogel/.config/MyWorkFolder/06-textures/01-texture-engine/skull.png", true, "skull");
+    Resource_Manager::load_texture("/home/koogel/MyWorkFolder/06-textures/01-texture-engine/skull.png", true, "skull");
     
     glm::vec2 playerPos = glm::vec2(this->width / 2.0f - PLAYER_SIZE.x / 2.0f, this->height - PLAYER_SIZE.y);
     player = new Game_Object(playerPos, PLAYER_SIZE, Resource_Manager::get_texture("skull") );

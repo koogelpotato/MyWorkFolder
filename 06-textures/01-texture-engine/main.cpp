@@ -1,8 +1,12 @@
 #include "glad/glad.h"
 #include <SDL3/SDL.h>
+#include "imgui_pack/imgui.h"
+#include "imgui_pack/imgui_impl_opengl3.h"
+#include "imgui_pack/imgui_impl_sdl3.h"
 
 #include "game.hpp"
 #include "resource-manager.hpp"
+#include "user-interface.hpp"
 
 #include <iostream>
 
@@ -13,7 +17,7 @@ const unsigned int SCREEN_HEIGHT = 600;
 Game Test(SCREEN_WIDTH, SCREEN_HEIGHT);
 
 
-
+//User_Interface* user_interface;
 int main(int arc, char *argv[])
 {
     const int sdl_init = SDL_Init(SDL_INIT_VIDEO);
@@ -77,28 +81,56 @@ int main(int arc, char *argv[])
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+    //user_interface->ui_init(window,&gl_context);
+    glGetError();
+
+    //IMGUI_CHECKVERSION();
+    //ImGui::CreateContext();
+    //ImGuiIO& io = ImGui::GetIO(); (void)io;
+    //ImGui_ImplSDL3_InitForOpenGL(window, gl_context);
+    //ImGui_ImplOpenGL3_Init("#version 320 es");
+
     Test.init_game();
+    glGetError();
     bool is_running = true;
     unsigned int current_frame = SDL_GetPerformanceCounter();
     unsigned int last_frame = 0;
     double delta_time = 0;
+    
+
     while(is_running)
     {
         last_frame = current_frame;
         current_frame = SDL_GetPerformanceCounter();
+        //user_interface->ui_init_new_frame();
 
         delta_time = (double)((current_frame - last_frame)*1000 / (double)SDL_GetPerformanceFrequency() );
+
+        //ImGui_ImplOpenGL3_NewFrame();
+        //ImGui_ImplSDL3_NewFrame();
+        //ImGui::NewFrame();
 
         Test.proccess_input(delta_time);
         Test.update(delta_time);
 
-
+        //ImGui::Render();
         glClearColor(1.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
+        //user_interface->ui_render_data();
+
+        //ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
         Test.render();
         SDL_GL_SwapWindow(window);
     }
+
     Resource_Manager::clear();
+    //ImGui_ImplOpenGL3_Shutdown();
+    //ImGui_ImplSDL3_Shutdown();
+    //ImGui::DestroyContext();
+
+    SDL_GL_DeleteContext(gl_context);
+    SDL_DestroyWindow(window);
     SDL_Quit();
     return   0;
 }
